@@ -8,6 +8,7 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 import BinaryTree
 
+# This function is for encoding string/object data type columns
 def Encode_Label(df):
     dtype = df.dtypes
     idx = np.array(dtype.index)
@@ -18,6 +19,7 @@ def Encode_Label(df):
 
     return
 
+# For creating a binary tree from dictionary 
 def make_binary_tree(tree, node):
     '''if not isinstance(tree, dict):
         node = BinaryTree.Node(tree)
@@ -40,6 +42,7 @@ def make_binary_tree(tree, node):
 
     return node
 
+# Get the column index of the class label
 def get_ClassLabel(df, ClassLabel):
     colum_num = -1
     j = 0
@@ -50,6 +53,8 @@ def get_ClassLabel(df, ClassLabel):
         j += 1
     return colum_num
 
+# For checking a dataset or subdataset is pure or not. 
+# Pure means there is only one class label. 
 def check_purity(data, ClassLabel):
     label_column = data[:, ClassLabel]
     unique_classes = np.unique(label_column)
@@ -59,6 +64,7 @@ def check_purity(data, ClassLabel):
     else:
         return False
 
+# Classifying the dataset
 def classify_data(data, ClassLabel):
     label_column = data[:, ClassLabel]
     unique_classes, counts_unique_classes = np.unique(label_column, return_counts=True)
@@ -68,7 +74,7 @@ def classify_data(data, ClassLabel):
 
     return classification
 
-
+# Get potential splits for every single unique value
 def get_potential_splits(data, ClassLabel, max_split=2):
     potential_splits = {}
     n_columns = data.shape
@@ -83,6 +89,8 @@ def get_potential_splits(data, ClassLabel, max_split=2):
 
     return potential_splits
 
+# Get potential splits according to the  max split criteria
+# (This function will must include the last unique value)
 def get_potential_splits2(data, ClassLabel, max_split=2):
     potential_splits = {}
     n_columns = data.shape
@@ -117,6 +125,8 @@ def get_potential_splits2(data, ClassLabel, max_split=2):
 
     return potential_splits
 
+# Get potential splits according to the  max split criteria
+# The last unique value may or may not be include
 def get_potential_splits3(data, ClassLabel, max_split=2):
     potential_splits = {}
     n_columns = data.shape
@@ -139,6 +149,8 @@ def get_potential_splits3(data, ClassLabel, max_split=2):
 
     return potential_splits
 
+# Splitting the dataset based on potential split value
+# This function is only for binary splits (Binary DT)
 def split_data(data, split_column, split_value):
     split_column_values = data[:, split_column]
 
@@ -153,19 +165,22 @@ def split_data(data, split_column, split_value):
 
     return data_below, data_above
 
+# This function is for non binary splits (Non Binary DT)
+# Used for categorical features
 def split_data2(data, split_column, split_value):
     split_column_values = data[:, split_column]
 
     data_equal= data[split_column_values == split_value]
     return data_equal
 
+# Used for continuous features
 def split_data3(data, split_column, split_value, pre_value):
     split_column_values = data[:, split_column]
 
     data_equal= data[(split_column_values <= split_value) & (split_column_values > pre_value)]
     return data_equal
 
-
+# Calculate the entropy of the dataset
 def calculate_entropy(data, ClassLabel):
     label_column = data[:, ClassLabel]
     counts = np.unique(label_column, return_counts=True)
@@ -176,7 +191,7 @@ def calculate_entropy(data, ClassLabel):
 
     return entropy
 
-
+# This function used in determine_best_split() which is used for binary DT
 def calculate_overall_entropy(data_below, data_above, ClassLabel):
     n = len(data_below) + len(data_above)
     p_data_below = len(data_below) / n
@@ -187,6 +202,7 @@ def calculate_overall_entropy(data_below, data_above, ClassLabel):
 
     return overall_entropy
 
+# This function used in determine_best_split2() which is used for non binary DT
 def calculate_overall_entropy2(data, list_n, entropy):
     n = len(data)
 
@@ -197,6 +213,7 @@ def calculate_overall_entropy2(data, list_n, entropy):
 
     return overall_entropy
 
+# Calculate the gini of the dataset
 def calculate_gini(data, ClassLabel):
     label_column = data[:, ClassLabel]
     counts = np.unique(label_column, return_counts=True)
@@ -207,6 +224,7 @@ def calculate_gini(data, ClassLabel):
 
     return gini
 
+# This function used in determine_best_split() which is used for binary DT
 def calculate_overall_gini(data_below, data_above, ClassLabel):
     n = len(data_below) + len(data_above)
     p_data_below = len(data_below) / n
@@ -217,6 +235,7 @@ def calculate_overall_gini(data_below, data_above, ClassLabel):
 
     return overall_gini
 
+# This function used in determine_best_split2() which is used for non binary DT
 def calculate_overall_gini2(data, list_n, gini):
     n = len(data)
 
@@ -227,6 +246,8 @@ def calculate_overall_gini2(data, list_n, gini):
 
     return overall_gini
 
+# This function will determine the best split for the given dataset
+# (Only Binary Split)
 def determine_best_split(data, potential_splits, ClassLabel, MeasureName, DONE=[]):
 
     overall_entropy = 9999
@@ -253,6 +274,8 @@ def determine_best_split(data, potential_splits, ClassLabel, MeasureName, DONE=[
 
     return best_split_column, best_split_value
 
+# This function will determine the best split for the given dataset
+# (Non Binary Split but can be binary if max_split == 2)
 def determine_best_split2(data, potential_splits, ClassLabel, MeasureName, DONE=[]):
     overall_entropy = 9999
     overall_gini = 9999
@@ -315,6 +338,7 @@ def determine_best_split2(data, potential_splits, ClassLabel, MeasureName, DONE=
 
     return best_split_column, best_split_value
 
+# Detect the type of attributes
 def determine_type_of_feature(df, ClassLabel):
     feature_types = []
     for feature in df.columns:
@@ -328,6 +352,7 @@ def determine_type_of_feature(df, ClassLabel):
                 feature_types.append("continuous")
     return feature_types
 
+# For finding the column index of a specific column
 def get_column_number2(df, column):
     j=0
     for i in df.columns:
@@ -336,6 +361,7 @@ def get_column_number2(df, column):
         j += 1
     return idx
 
+# Get the column index for every single column
 def get_column_number(df):
     column_number = {}
     j=0
@@ -344,7 +370,12 @@ def get_column_number(df):
         j += 1
     return column_number
 
+# The Decision tree algorithm
+'''
 
+For understanding the parameters, please read the "Instructions.txt" file. 
+
+'''
 def decision_tree_algorithm(df, ClassLabel, MeasureName, BFactor, max_split=2, counter=0, max_depth=10, DONE = [], flg=0):
     if counter == 0:
         global COLUMN_HEADERS, FEATURE_TYPES, DONE2, COLUMN_NUMBER
@@ -457,6 +488,8 @@ def decision_tree_algorithm(df, ClassLabel, MeasureName, BFactor, max_split=2, c
                 DONE.remove(feature_name)
             return sub_tree2
 
+# Classifying single instance of the dataset
+# For binary DT
 def classify_example(example, tree):
     question = list(tree.keys())[0]
     #print(question)
@@ -480,6 +513,7 @@ def classify_example(example, tree):
         residual_tree = answer
         return classify_example(example, residual_tree)
 
+# For non binary DT
 def classify_example2(example, tree):
     check = list(tree.keys())[0]
     if '=' not in check:
@@ -517,7 +551,7 @@ def classify_example2(example, tree):
         else:
             return 'x'
 
-
+# Calculate the overall accuracy of the Decision Tree Classifier
 def calculate_accuracy(df, tree, ClassLabel, BFactor):
     #ClassLabelx = get_ClassLabel(df, ClassLabel)
     df2 = df.copy()
@@ -543,13 +577,14 @@ def calculate_accuracy(df, tree, ClassLabel, BFactor):
     accuracy = df2["comparison_column"].mean()
     return accuracy
 
-
+# Replace the blank space with '-' from column values
 def replace_space(value):
     for i in range(len(value)):
         if value[i] == ' ':
             value = value[:i]+'_'+value[i+1:]
     return value
 
+# :p
 def halka_preprocessing(df):
     df.columns = df.columns.str.replace(' ', '_')
 

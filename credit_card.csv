@@ -1,0 +1,11 @@
+Tid,Refund,Marital Status,Taxable Income (K),Cheat
+1,Yes,Single,125,No
+2,No,Married,100,No
+3,No,Single,70,No
+4,Yes,Married,120,No
+5,No,Divorced,95,Yes
+6,No,Married,60,No
+7,Yes,Divorced,220,No
+8,No,Single,85,Yes
+9,No,Married,75,No
+10,No,Single,90,Yes

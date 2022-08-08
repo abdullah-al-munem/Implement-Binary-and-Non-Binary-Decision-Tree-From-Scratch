@@ -1,5 +1,7 @@
 # Implement-Binary-and-Non-Binary-Decision-Tree-From-Scratch
 
+### To run this code use the following Parameters:
+
 Parameters/Switches: 
 
 1. -m measureName (measureName  can be "G" (for gini index) or "E" (for entropy). If no "-a" switch is found, default will be Gini Index)

@@ -2,7 +2,7 @@
 
 ### To run this code use the following Parameters:
 
-Parameters/Switches: 
+#### Parameters/Switches: 
 
 1. -m measureName (measureName  can be "G" (for gini index) or "E" (for entropy). If no "-a" switch is found, default will be Gini Index)
 2. -f fileName (fileName is the name of the dataset. By default the dataset is "Irish" which is available in a certain package of python and on internet)
@@ -13,7 +13,7 @@ Parameters/Switches:
 7. -d display-node-order (display-node-order shows the order of the nodes in the tree in prefix style [Root, Left, Right] that reveals the order of the splits. This switch have no parameters to take as input.)
 
 
-Sample Inputs: 
+#### Sample Inputs: 
 1. python DTC.py -r 0.6 -d
 2. python DTC.py -f creditcard.csv -r 0.8 -d -m G
 3. python DTC.py -h strange.csv 0.8 -m G
